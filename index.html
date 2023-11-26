@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" href="styles.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  </head>
+  <body>
+    <div id="target-paragraph">24 Points Game</div>
+    <div class="explaination">
+      In the game of 24 points, you're given four numbers, like 4, 6, 8, and 2,
+      and you have to use addition, subtraction, multiplication, and division to
+      make the number 24. You can only use each number once, and you have to end
+      up with a whole number. For example, with 4, 6, 8, and 2, you could say 6
+      divided by (8 divided by 2) times 4. It's like a puzzle where you get to
+      play with numbers and try to make them add up to 24 in different ways—it's
+      a fun way to practice math!
+    </div>
+    <div class="game">
+      <div class="numberBox">
+        <div class="numbers"></div>
+        <div class="numbers"></div>
+        <div class="numbers"></div>
+        <div class="numbers"></div>
+      </div>
+      <div class="operatorBox">
+        <div class="operator">+</div>
+        <div class="operator">-</div>
+        <div class="operator">*</div>
+        <div class="operator">/</div>
+        <div class="operator2">(</div>
+        <div class="operator2">)</div>
+        <button class="refresh">Refresh</button>
+      </div>
+
+      <div id="resulting"></div>
+      <button class="back">back</button>
+      <button class="go">Go</button>
+    </div>
+    <div class="end">
+      <div>Congratulaitons!! You solve it!!</div>
+
+      <button class="try">Try again?</button>
+    </div>
+    <script src="script.js"></script>
+  </body>
+</html>
