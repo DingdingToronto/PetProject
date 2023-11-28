@@ -37,8 +37,11 @@ $(window).on("load", function () {
 
   // Function to check if the last character in resulting is not a number
   function isLastCharacterNotNumber() {
-    var lastCharacter = $("#resulting").text().split("").pop();
-    return isNaN(parseInt(lastCharacter));
+    var lastCharacter = $("#resulting").text().split("");
+    return (
+      isNaN(parseInt(lastCharacter[lastCharacter.length - 1])) &&
+      lastCharacter[lastCharacter.length - 1] != ")"
+    );
   }
 
   // Set up styles for initial numbers
@@ -63,17 +66,37 @@ $(window).on("load", function () {
     $(this).on("click", function () {
       var lastCharacter = $("#resulting").text().split("");
 
-      if (!isNaN(parseInt(lastCharacter.pop())) && lastCharacter.length <= 30) {
+      if (
+        (!isNaN(parseInt(lastCharacter[lastCharacter.length - 1])) &&
+          lastCharacter.length <= 40) ||
+        lastCharacter[lastCharacter.length - 1] == ")"
+      ) {
         var textToAppend = $(this).text();
         $("#resulting").append(" " + textToAppend);
       }
     });
   });
-  $(".operator2").each(function () {
+  $(".operatorLeft").each(function () {
     $(this).on("click", function () {
       var lastCharacter = $("#resulting").text().split("");
 
-      if (lastCharacter.length <= 30) {
+      if (
+        lastCharacter.length <= 40 &&
+        isNaN(parseInt(lastCharacter[lastCharacter.length - 1]))
+      ) {
+        var textToAppend = $(this).text();
+        $("#resulting").append(" " + textToAppend);
+      }
+    });
+  });
+  $(".operatorRight").each(function () {
+    $(this).on("click", function () {
+      var lastCharacter = $("#resulting").text().split("");
+
+      if (
+        lastCharacter.length <= 40 &&
+        !isNaN(parseInt(lastCharacter[lastCharacter.length - 1]))
+      ) {
         var textToAppend = $(this).text();
         $("#resulting").append(" " + textToAppend);
       }
