@@ -144,7 +144,7 @@ $(window).on("load", function () {
   $(".go").on("click", function () {
     if (eval($("#resulting").text()) === 24) {
       $(".game").css("display", "none");
-      $(".end").fadeIn(1500);
+      $(".end").css("display", "flex");
     } else {
       $(".go").css({
         animation: "shiver 0.5s ease-in-out",

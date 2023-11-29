@@ -3,6 +3,7 @@ body {
 }
 /*-------------------------------Title----------------------------------->*/
 #target-paragraph {
+  position: absolute;
   background-color: black;
   text-align: center;
   font-size: 50px;
@@ -136,11 +137,12 @@ body {
 }
 
 .end {
-  margin-left: 300px;
   display: none;
   flex-direction: column;
+  justify-content: center;
+  align-items: center;
   height: 80px; /* Increase the height for a larger button */
-  width: 60%; /* Adjust the width as needed */
+  width: 100%; /* Adjust the width as needed */
   background-color: #000000;
   color: #ffffff;
   font-size: 30px; /* Adjust the font size for better proportion */
@@ -190,4 +192,9 @@ body {
     background-color: #000000; /* Black background on hover */
     color: #ffffff; /* White text color on hover */
   }
+}
+.buttons {
+  display: flex;
+  justify-content: center;
+  width: 53%;
 }
