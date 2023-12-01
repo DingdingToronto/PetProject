@@ -1,6 +1,7 @@
+var backNumber = [];
+var countNumber = [];
+var allNumbers = [];
 $(window).on("load", function () {
-  var backNumber = [];
-
   // Function to get a random number between 1 and 13
   function getRandomNumber() {
     return Math.ceil(Math.random() * 13);
@@ -33,6 +34,7 @@ $(window).on("load", function () {
       "color",
       "rgb(" + colorToShow1 + "," + colorToShow2 + "," + colorToShow3 + ")"
     );
+    allNumbers.push(numberToShow);
   }
 
   // Function to check if the last character in resulting is not a number
@@ -52,11 +54,13 @@ $(window).on("load", function () {
 
     // Click event for numbers
     $(this).on("click", function () {
+      console.log(allNumbers);
       if (active && isLastCharacterNotNumber()) {
         var textToAppend = $(this).text();
         $("#resulting").append(" " + textToAppend);
         $(this).css("opacity", "0.3");
         active = false;
+        countNumber.push($(this).text());
       }
     });
   });
@@ -110,6 +114,8 @@ $(window).on("load", function () {
       var lastElement = info.pop();
       if (!isNaN(parseInt(lastElement))) {
         backNumber.push(lastElement);
+        countNumber.pop();
+        console.log("countNumber is:", countNumber);
 
         // Restore opacity for the clicked number
         $(".numbers").each(function () {
@@ -135,6 +141,7 @@ $(window).on("load", function () {
           backNumber.splice(i, 1);
           var textToAppend = $(this).text();
           $("#resulting").append(" " + textToAppend);
+          countNumber.push($(this).text());
         }
       }
     });
@@ -142,24 +149,33 @@ $(window).on("load", function () {
 
   //compare the result with number 24
   $(".go").on("click", function () {
-    if (eval($("#resulting").text()) === 24) {
-      $(".game").css("display", "none");
-      $(".end").css("display", "flex");
+    const originalText = $("#resulting").text();
+    if (countNumber.length !== 4) {
+      $("#resulting").text("All provided number should be used once");
+      $("#resulting").css("fontSize", "20px");
+      $("#resulting").css("color", "red");
+      setTimeout(() => {
+        $("#resulting").text(originalText);
+        $("#resulting").css("fontSize", "40px");
+        $("#resulting").css("color", "black");
+      }, 1500);
     } else {
-      $(".go").css({
-        animation: "shiver 0.5s ease-in-out",
-        color: "red",
-      });
-      $(".go").text("UNCORRECT");
-
-      // Use the correct spelling for the function keyword
-      setTimeout(function () {
-        $(".go").css("animation", "");
-        $(".go").text("Go");
+      if (eval($("#resulting").text()) === 24) {
+        $(".game").css("display", "none");
+        $(".end").css("display", "flex");
+      } else {
+        $("#resulting").text("Sorry, It's not correct");
+        $("#resulting").css("fontSize", "20px");
+        $("#resulting").css("color", "red");
         $(".go").css({
-          color: "green",
+          animation: "shiver 0.5s ease-in-out",
         });
-      }, 500);
+        setTimeout(() => {
+          $("#resulting").text(originalText);
+          $("#resulting").css("fontSize", "40px");
+          $("#resulting").css("color", "black");
+        }, 1500);
+      }
     }
   });
   $(".refresh").on("click", function () {
@@ -190,4 +206,49 @@ $(window).on("load", function () {
       }
     );
   }
+});
+
+$(".sendToAPI").on("click", function () {
+  // Assuming the API endpoint is 'https://helloacm.com/api/24/'
+  var apiUrl = "https://helloacm.com/api/24/";
+  const originalText = $("#resulting").text();
+
+  // Generate the query parameters based on allNumbers
+  var queryParams = allNumbers
+    .map((number, index) => `${String.fromCharCode(97 + index)}=${number}`)
+    .join("&");
+
+  // Construct the API URL with query parameters
+  var fullApiUrl = `${apiUrl}?${queryParams}`;
+
+  // Make the GET request using fetch
+  fetch(fullApiUrl)
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      return response.json();
+    })
+    .then((data) => {
+      // Handle the response data here
+      console.log("API Response:", data);
+      if (data.result.length > 1) {
+        $("#resulting").text(data.result[0]);
+        $("#resulting").css("color", "green");
+        setTimeout(() => {
+          $("#resulting").text(originalText);
+          $("#resulting").css("color", "black");
+        }, 2000);
+      } else {
+        $("#resulting").text("It is impossible");
+        $("#resulting").css("color", "red");
+        setTimeout(() => {
+          $("#resulting").text(originalText);
+          $("#resulting").css("color", "black");
+        }, 2000);
+      }
+    })
+    .catch((error) => {
+      console.error("Fetch error:", error);
+    });
 });

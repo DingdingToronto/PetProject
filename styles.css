@@ -93,7 +93,8 @@ body {
   overflow: hidden;
 }
 .back,
-.go {
+.go,
+.clue {
   display: inline-block;
   padding: 10px 20px;
   margin: 10px;
