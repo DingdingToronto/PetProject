@@ -1,7 +1,31 @@
 var backNumber = [];
 var countNumber = [];
 var allNumbers = [];
+
+if (!localStorage.getItem("stateOfBegin")) {
+  localStorage.setItem("stateOfBegin", "false");
+}
+
+// Retrieve data from localStorage
+var stateOfBegin = localStorage.getItem("stateOfBegin");
+console.log(stateOfBegin); // Outputs: false
+
+function ready() {
+  localStorage.setItem("stateOfBegin", "true");
+}
+
 $(window).on("load", function () {
+  if (stateOfBegin === "false") {
+    $(".buttonBegin").on("click", function () {
+      $(".explaination").css("display", "none");
+      $(".game").css("display", "block");
+      ready();
+    });
+  } else {
+    $(".explaination").css("display", "none");
+    $(".game").css("display", "block");
+  }
+
   // Function to get a random number between 1 and 13
   function getRandomNumber() {
     return Math.ceil(Math.random() * 13);
@@ -183,29 +207,34 @@ $(window).on("load", function () {
   });
   $(".try").on("click", function () {
     location.reload();
+    localStorage.removeItem("stateOfBegin");
+  });
+  $(".rule").on("click", function () {
+    location.reload();
+    localStorage.removeItem("stateOfBegin");
   });
 
-  if ($(".end").css("display") === "none") {
-    // Attach hover events to #target-paragraph
-    $("#target-paragraph").hover(
-      function () {
-        // Check the condition again before hiding .game
-        if ($(".end").css("display") === "none") {
-          $(".game").css("display", "none");
-          $(".explaination").fadeIn(1000);
-        }
-      },
-      function () {
-        // Check the condition again before showing .game
-        if ($(".end").css("display") === "none") {
-          setTimeout(function () {
-            $(".game").css("display", "block");
-          }, 1000);
-          $(".explaination").fadeOut(500);
-        }
-      }
-    );
-  }
+  // if ($(".end").css("display") === "none") {
+  //   // Attach hover events to #target-paragraph
+  //   $("#target-paragraph").hover(
+  //     function () {
+  //       // Check the condition again before hiding .game
+  //       if ($(".end").css("display") === "none") {
+  //         $(".game").css("display", "none");
+  //         $(".explaination").fadeIn(1000);
+  //       }
+  //     },
+  //     function () {
+  //       // Check the condition again before showing .game
+  //       if ($(".end").css("display") === "none") {
+  //         setTimeout(function () {
+  //           $(".game").css("display", "block");
+  //         }, 1000);
+  //         $(".explaination").fadeOut(500);
+  //       }
+  //     }
+  //   );
+  // }
 });
 
 $(".sendToAPI").on("click", function () {
@@ -233,19 +262,9 @@ $(".sendToAPI").on("click", function () {
       // Handle the response data here
       console.log("API Response:", data);
       if (data.result.length > 1) {
-        $("#resulting").text(data.result[0]);
-        $("#resulting").css("color", "green");
-        setTimeout(() => {
-          $("#resulting").text(originalText);
-          $("#resulting").css("color", "black");
-        }, 2000);
+        alert("The Answer is:" + data.result[0]);
       } else {
-        $("#resulting").text("It is impossible");
-        $("#resulting").css("color", "red");
-        setTimeout(() => {
-          $("#resulting").text(originalText);
-          $("#resulting").css("color", "black");
-        }, 2000);
+        alert("It is impossible with these 4 numbers, please refresh");
       }
     })
     .catch((error) => {
